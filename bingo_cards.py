@@ -6,47 +6,55 @@ from reportlab.lib.units import inch
 import random
 
 # Configuration variables
-TITLE = "Super Bowl Commercial BINGO"
-INSTRUCTIONS = "Mark off each persuasive technique as you see it used in Super Bowl commercials!"
+TITLE = "Super Bowl Commercial Bingo"
+INSTRUCTIONS = "The grid below shows some ways commercials appeal to us to think more highly of a brand. When you see a commercial that uses an appeal in your grid, write the name of the brand in the corresponding box. 1 box per commercial. Win by marking 5 boxes in a row (vertical, horizontal, or diagonal)."
 NUM_PAGES = 20  # Will generate twice this many cards (2 per page)
-CENTER_SQUARE = "Humor as persuasion"
+CENTER_SQUARE = "Humor"
 
 # List of persuasive techniques (excluding the center square technique)
 TECHNIQUES = [
-    "Bandwagon effect",
-    "Social proof through testimonials",
-    "Authority appeal",
-    "Scarcity appeal",
-    "Exclusivity appeal",
-    "Nostalgia appeal",
-    "Fear appeal",
+    '"Everyone is doing it!"',
+    "Testimonials",
+    "Promise of physical attractiveness",
+    "Association with physical attractiveness",
+    "Scarcity",
+    '"Be part of the in-group"',
+    "Nostalgia",
+    "Promise of authenticity",
     "FOMO",
-    "Status/prestige appeal",
-    "Emotional storytelling appeal",
-    "Patriotic appeal",
-    "Family values appeal",
-    "Environmental responsibility appeal",
-    "Social responsibility appeal",
-    "Celebrity credibility appeal",
-    "Problem-solution framework",
-    "Comparative advantage",
-    "Scientific/statistical evidence",
-    "Value proposition",
-    "Lifestyle association",
-    "Tradition/heritage appeal",
-    "Simplification appeal",
-    "Peer pressure appeal",
-    "Aspirational appeal",
-    "Guilt appeal",
-    "Safety/security appeal",
-    "Luxury/indulgence appeal",
-    "Masculinity/femininity appeal",
-    "Health/wellness appeal",
-    "Innovation/cutting-edge appeal",
-    "Convenience appeal",
-    "Unity/belonging appeal",
-    "Success association",
-    "Self-improvement appeal"
+    "Promise of being accepted",
+    "Thrill-seeking",
+    '"Be your own person"',
+    '"Live for the moment"',
+    "Status",
+    '"Impress others with your good taste"',
+    "Emotional storytelling",
+    "Patriotism",
+    "Value of family",
+    "Environmental responsibility",
+    "Social responsibility",
+    "Celebrity credibility",
+    "Celebrity association",
+    "Solves a problem",
+    "Better than competitor",
+    "Scientific evidence",
+    "Bang for the buck",
+    "Desirable lifestyle",
+    "Tradition",
+    '"Simplify your life"',
+    '"Become the person you want to be"',
+    "Envy",
+    "Safety / security",
+    "Luxury / indulgence",
+    "Masculinity / femininity",
+    "Health / wellness",
+    "Being on the cutting edge",
+    "Convenience",
+    "Promise of success",
+    "Association with success",
+    "Self improvement",
+    "Comfort",
+    '"Live for yourself, not anyone else"'
 ]
 
 def create_bingo_card():
@@ -64,7 +72,7 @@ def create_bingo_card():
             else:
                 content = card_content[index]
                 index += 1
-            # Wrap each cell's content in a Paragraph for text wrapping
+            # Add hyphenation points and wrap in Paragraph
             cell = Paragraph(content, cell_style)
             row.append(cell)
         grid.append(row)
@@ -76,12 +84,13 @@ def create_single_card():
     
     # Calculate dimensions for a portrait-oriented card
     card_width = 4.0 * inch  # Width of the card
-    square_size = card_width / 5  # Size of each bingo square
+    square_width = card_width / 5  # Width of each bingo square
+    square_height = square_width * 1.2  # Make rectangles 20% taller than wide
     
     # Create the bingo grid
     bingo_table = Table(grid, 
-                       colWidths=[square_size] * 5,
-                       rowHeights=[square_size] * 5,
+                       colWidths=[square_width] * 5,
+                       rowHeights=[square_height] * 5,
                        style=TableStyle([
                            ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                            ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
@@ -102,7 +111,7 @@ def create_single_card():
     
     complete_card = Table(card_content,
                          colWidths=[card_width],
-                         rowHeights=[0.4*inch, 0.3*inch, card_width],
+                         rowHeights=[0.5*inch, 1.1*inch, square_height * 5],
                          style=TableStyle([
                              ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                              ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
@@ -123,19 +132,19 @@ def create_pdf(filename):
     
     # Create pages with two cards side by side
     for _ in range(NUM_PAGES):
-        # Create a row with two cards
+        # Create a row with two cards and empty middle column for gutter
         card1 = create_single_card()
         card2 = create_single_card()
         
-        # Put the cards side by side in a table with spacing between them
+        # Put the cards side by side with gutter
         page_table = Table([[card1, '', card2]], 
-                  colWidths=[4.0*inch, 1.0*inch, 4.0*inch],
-                  style=TableStyle([
-                      ('ALIGN', (0,0), (-1,-1), 'CENTER'),
-                      ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
-                      ('LEFTPADDING', (0,0), (-1,-1), 0.75*inch),
-                      ('RIGHTPADDING', (0,0), (-1,-1), 0.75*inch),
-                  ]))
+                          colWidths=[4.0*inch, 1.0*inch, 4.0*inch],
+                          style=TableStyle([
+                              ('ALIGN', (0,0), (-1,-1), 'CENTER'),
+                              ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
+                              ('LEFTPADDING', (0,0), (-1,-1), 0.75*inch),
+                              ('RIGHTPADDING', (0,0), (-1,-1), 0.75*inch),
+                          ]))
         
         elements.append(page_table)
     
@@ -154,8 +163,9 @@ instruction_style = ParagraphStyle(
     'CustomInstructions',
     parent=styles['Normal'],
     fontSize=10,
-    alignment=1,
-    spaceAfter=6
+    alignment=0,
+    spaceAfter=6,
+    xml=1  # This enables HTML tags
 )
 cell_style = ParagraphStyle(
     'CellStyle',
@@ -163,7 +173,14 @@ cell_style = ParagraphStyle(
     fontSize=8,
     alignment=1,
     leading=9,  # Controls line spacing within cells
-    wordWrap='CJK'  # Ensures aggressive word wrapping
+    wordWrap='LTR',  # Left-to-right text wrapping
+    allowWidows=0,
+    allowOrphans=0,
+    splitLongWords=1,  # Enable word splitting
+    hyphenationLanguage='en_US',  # Note: hyphenationLanguage, not hyphenationLang
+    hyphenationMinWordLength=5,
+    hyphenationRemainCharLength=2,  # Minimum chars before hyphen
+    hyphenationCharLength=2  # Minimum chars after hyphen
 )
 
 if __name__ == "__main__":
