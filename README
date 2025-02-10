@@ -1,0 +1,4 @@
+# Super Bowl Commercial Bingo
+This script generates bingo cards that can be used as a side-game for Super Bowl parties. It uses ReportLab to generate a PDF file that has two bingo cards per page.
+
+Besides being a fun game, its aim is to help participants develop greater discernment about how advertising affects them.
