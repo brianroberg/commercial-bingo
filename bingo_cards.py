@@ -7,27 +7,29 @@ import random
 
 # Configuration variables
 TITLE = "Super Bowl Commercial Bingo"
-INSTRUCTIONS = "The grid below shows some ways commercials appeal to us to think more highly of a brand. When you see a commercial that uses an appeal in your grid, write the name of the brand in the corresponding box. 1 box per commercial. Win by marking 5 boxes in a row (vertical, horizontal, or diagonal)."
-NUM_PAGES = 20  # Will generate twice this many cards (2 per page)
+INSTRUCTIONS = "The goal of almost all commercials is to convince you to think more highly of a brand. The grid below lists some of the messages or themes commercials use to try to influence us. When you see a commercial that uses one of the messages/themes below, write the name of the brand in the corresponding box. 1 box per commercial. Win by marking 5 boxes in a row (vertical, horizontal, or diagonal)."
+NUM_PAGES = 30  # Will generate twice this many cards (2 per page)
 CENTER_SQUARE = "Humor"
 
 # List of persuasive techniques (excluding the center square technique)
 TECHNIQUES = [
-    '"Everyone is doing it!"',
+    '“Everyone is doing it!”',
+    "Urgency (“Act now!”)",
     "Testimonials",
     "Promise of physical attractiveness",
     "Association with physical attractiveness",
     "Scarcity",
-    '"Be part of the in-group"',
+    '“Be part of the in-group”',
     "Nostalgia",
     "Promise of authenticity",
-    "FOMO",
+    "Fear of missing out",
     "Promise of being accepted",
     "Thrill-seeking",
-    '"Be your own person"',
-    '"Live for the moment"',
-    "Status",
-    '"Impress others with your good taste"',
+    '“Be your own person”',
+    '“Live for the moment”',
+    "Promise of status",
+    '“Impress others with your good taste”',
+    '“You’re smarter than these people we’re all laughing at”',
     "Emotional storytelling",
     "Patriotism",
     "Value of family",
@@ -39,22 +41,22 @@ TECHNIQUES = [
     "Better than competitor",
     "Scientific evidence",
     "Bang for the buck",
-    "Desirable lifestyle",
+    "Promise of desirable lifestyle",
     "Tradition",
-    '"Simplify your life"',
-    '"Become the person you want to be"',
+    '“Simplify your life”',
+    '“Become the person you want to be”',
     "Envy",
-    "Safety / security",
+    "Promise of safety / security",
     "Luxury / indulgence",
-    "Masculinity / femininity",
+    "Promise of being more masculine / feminine",
     "Health / wellness",
-    "Being on the cutting edge",
+    "“Be a trend-setter”",
     "Convenience",
     "Promise of success",
     "Association with success",
     "Self improvement",
-    "Comfort",
-    '"Live for yourself, not anyone else"'
+    "Comfort / ease",
+    '“Live for yourself, not anyone else”'
 ]
 
 def create_bingo_card():
@@ -111,7 +113,7 @@ def create_single_card():
     
     complete_card = Table(card_content,
                          colWidths=[card_width],
-                         rowHeights=[0.5*inch, 1.1*inch, square_height * 5],
+                         rowHeights=[0.5*inch, 1.4*inch, square_height * 5],
                          style=TableStyle([
                              ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                              ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
@@ -138,7 +140,7 @@ def create_pdf(filename):
         
         # Put the cards side by side with gutter
         page_table = Table([[card1, '', card2]], 
-                          colWidths=[4.0*inch, 1.0*inch, 4.0*inch],
+                          colWidths=[4.0*inch, 1.5*inch, 4.0*inch],
                           style=TableStyle([
                               ('ALIGN', (0,0), (-1,-1), 'CENTER'),
                               ('VALIGN', (0,0), (-1,-1), 'MIDDLE'),
